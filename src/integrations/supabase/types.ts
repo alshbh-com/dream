@@ -789,6 +789,7 @@ export type Database = {
           label: string | null
           limits_reset_date: string
           phone_number: string
+          profit: number
           provider: Database["public"]["Enums"]["wallet_provider"]
           updated_at: string
           used_deposit_today: number
@@ -807,6 +808,7 @@ export type Database = {
           label?: string | null
           limits_reset_date?: string
           phone_number: string
+          profit?: number
           provider: Database["public"]["Enums"]["wallet_provider"]
           updated_at?: string
           used_deposit_today?: number
@@ -825,6 +827,7 @@ export type Database = {
           label?: string | null
           limits_reset_date?: string
           phone_number?: string
+          profit?: number
           provider?: Database["public"]["Enums"]["wallet_provider"]
           updated_at?: string
           used_deposit_today?: number
