@@ -260,10 +260,13 @@ function TxDialog({ wallet, onClose }: { wallet: Wallet; onClose: () => void }) 
     const newUsed = used + amt;
     const newBalance = type === "deposit" ? wallet.balance + amt : wallet.balance - amt;
     const shouldBlock = newUsed >= limit;
-    const updates: Record<string, unknown> = {
-      [usedField]: newUsed,
-      balance: newBalance,
-    };
+    const updates: {
+      used_withdrawal_today?: number; used_transfer_today?: number; used_deposit_today?: number;
+      balance: number; is_blocked?: boolean;
+    } = { balance: newBalance };
+    if (type === "withdrawal") updates.used_withdrawal_today = newUsed;
+    else if (type === "transfer") updates.used_transfer_today = newUsed;
+    else if (type === "deposit") updates.used_deposit_today = newUsed;
     if (shouldBlock) updates.is_blocked = true;
     await supabase.from("wallets").update(updates).eq("id", wallet.id);
 

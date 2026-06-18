@@ -19,7 +19,8 @@ export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
 });
 
-const navItems = [
+type NavItem = { to: string; icon: typeof LayoutDashboard; label: string; adminOnly?: boolean };
+const navItems: NavItem[] = [
   { to: "/dashboard", icon: LayoutDashboard, label: "الرئيسية" },
   { to: "/pos", icon: ShoppingCart, label: "نقاط البيع" },
   { to: "/wallets", icon: Wallet, label: "المحافظ" },
@@ -30,7 +31,7 @@ const navItems = [
   { to: "/agents", icon: UserCog, label: "المندوبون" },
   { to: "/expenses", icon: Receipt, label: "المصروفات" },
   { to: "/users", icon: Smartphone, label: "المستخدمون", adminOnly: true },
-] as const;
+];
 
 function AuthLayout() {
   const { user, roles, isAdmin, signOut } = useAuth();
@@ -68,7 +69,7 @@ function AuthLayout() {
             return (
               <Link
                 key={item.to}
-                to={item.to}
+                to={item.to as "/dashboard"}
                 onClick={() => setOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                   active

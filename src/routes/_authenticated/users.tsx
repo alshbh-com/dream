@@ -37,8 +37,9 @@ function UsersPage() {
     );
   }
 
+  type AppRoleDB = "owner" | "admin" | "cashier" | "accountant" | "agent" | "branch_manager";
   const assignRole = async (userId: string, role: string) => {
-    const { error } = await supabase.from("user_roles").upsert({ user_id: userId, role: role as "owner" | "admin" | "cashier" | "accountant" | "agent" | "branch_manager" }, { onConflict: "user_id,role" });
+    const { error } = await supabase.from("user_roles").upsert({ user_id: userId, role: role as AppRoleDB }, { onConflict: "user_id,role" });
     if (error) return toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["all-roles"] });
     toast.success("تم إضافة الدور");
