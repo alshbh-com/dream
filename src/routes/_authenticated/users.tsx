@@ -46,7 +46,7 @@ function UsersPage() {
   };
 
   const removeRole = async (userId: string, role: string) => {
-    const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", role);
+    const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", role as AppRoleDB);
     if (error) return toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["all-roles"] });
     toast.success("تم حذف الدور");
