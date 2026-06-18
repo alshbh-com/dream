@@ -479,6 +479,24 @@ export type Database = {
           },
         ]
       }
+      role_permissions: {
+        Row: {
+          created_at: string
+          gateway: string
+          role: string
+        }
+        Insert: {
+          created_at?: string
+          gateway: string
+          role: string
+        }
+        Update: {
+          created_at?: string
+          gateway?: string
+          role?: string
+        }
+        Relationships: []
+      }
       sale_items: {
         Row: {
           created_at: string
@@ -836,6 +854,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin_or_owner: { Args: { _user_id: string }; Returns: boolean }
+      user_gateways: { Args: { _uid: string }; Returns: string[] }
     }
     Enums: {
       app_role:
@@ -845,6 +864,7 @@ export type Database = {
         | "accountant"
         | "agent"
         | "branch_manager"
+        | "supervisor"
       imei_status: "available" | "sold" | "returned" | "damaged"
       installment_status: "pending" | "paid" | "overdue" | "partial"
       payment_method: "cash" | "wallet" | "mixed" | "installment"
@@ -994,6 +1014,7 @@ export const Constants = {
         "accountant",
         "agent",
         "branch_manager",
+        "supervisor",
       ],
       imei_status: ["available", "sold", "returned", "damaged"],
       installment_status: ["pending", "paid", "overdue", "partial"],
