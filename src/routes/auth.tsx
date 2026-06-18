@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Smartphone } from "lucide-react";
 
@@ -17,16 +16,8 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  // login
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPwd, setLoginPwd] = useState("");
-
-  // signup
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [pwd, setPwd] = useState("");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -44,24 +35,6 @@ function AuthPage() {
     navigate({ to: "/dashboard" });
   };
 
-  const onSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pwd.length < 6) return toast.error("كلمة المرور 6 أحرف على الأقل");
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password: pwd,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-        data: { full_name: name, phone },
-      },
-    });
-    setLoading(false);
-    if (error) return toast.error(error.message);
-    toast.success("تم إنشاء الحساب — جاري الدخول");
-    await supabase.auth.signInWithPassword({ email, password: pwd });
-    navigate({ to: "/dashboard" });
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 gradient-emerald">
