@@ -39,8 +39,31 @@ export const txTypeLabel = (t: string) => ({
 export const roleLabel = (r: string) => ({
   owner: "مالك",
   admin: "أدمن",
+  supervisor: "مسؤول",
   cashier: "كاشير",
   accountant: "محاسب",
   agent: "مندوب",
   branch_manager: "مدير فرع",
 }[r] ?? r);
+
+export const gatewayLabel = (g: string) => ({
+  dashboard: "الرئيسية",
+  pos: "نقاط البيع",
+  wallets: "المحافظ",
+  treasury: "الخزينة",
+  inventory: "المخزون",
+  customers: "العملاء",
+  installments: "الأقساط",
+  agents: "المندوبون",
+  expenses: "المصروفات",
+  users: "المستخدمون",
+}[g] ?? g);
+
+export const ALL_GATEWAYS = [
+  "dashboard","pos","wallets","treasury","inventory",
+  "customers","installments","agents","expenses","users",
+] as const;
+
+export const ALL_ROLES = [
+  "owner","admin","supervisor","cashier","accountant","agent","branch_manager",
+] as const;
