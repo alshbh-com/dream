@@ -19,22 +19,22 @@ export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
 });
 
-type NavItem = { to: string; icon: typeof LayoutDashboard; label: string; adminOnly?: boolean };
+type NavItem = { to: string; gateway: string; icon: typeof LayoutDashboard; label: string };
 const navItems: NavItem[] = [
-  { to: "/dashboard", icon: LayoutDashboard, label: "الرئيسية" },
-  { to: "/pos", icon: ShoppingCart, label: "نقاط البيع" },
-  { to: "/wallets", icon: Wallet, label: "المحافظ" },
-  { to: "/treasury", icon: Coins, label: "الخزينة اليومية" },
-  { to: "/inventory", icon: Package, label: "المخزون" },
-  { to: "/customers", icon: Users, label: "العملاء" },
-  { to: "/installments", icon: CalendarClock, label: "الأقساط" },
-  { to: "/agents", icon: UserCog, label: "المندوبون" },
-  { to: "/expenses", icon: Receipt, label: "المصروفات" },
-  { to: "/users", icon: Smartphone, label: "المستخدمون", adminOnly: true },
+  { to: "/dashboard", gateway: "dashboard", icon: LayoutDashboard, label: "الرئيسية" },
+  { to: "/pos", gateway: "pos", icon: ShoppingCart, label: "نقاط البيع" },
+  { to: "/wallets", gateway: "wallets", icon: Wallet, label: "المحافظ" },
+  { to: "/treasury", gateway: "treasury", icon: Coins, label: "الخزينة اليومية" },
+  { to: "/inventory", gateway: "inventory", icon: Package, label: "المخزون" },
+  { to: "/customers", gateway: "customers", icon: Users, label: "العملاء" },
+  { to: "/installments", gateway: "installments", icon: CalendarClock, label: "الأقساط" },
+  { to: "/agents", gateway: "agents", icon: UserCog, label: "المندوبون" },
+  { to: "/expenses", gateway: "expenses", icon: Receipt, label: "المصروفات" },
+  { to: "/users", gateway: "users", icon: Smartphone, label: "المستخدمون" },
 ];
 
 function AuthLayout() {
-  const { user, roles, isAdmin, signOut } = useAuth();
+  const { user, roles, canAccess, signOut } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
@@ -64,7 +64,7 @@ function AuthLayout() {
 
         <nav className="p-3 space-y-1 overflow-y-auto h-[calc(100vh-4rem-5rem)]">
           {navItems.map((item) => {
-            if (item.adminOnly && !isAdmin) return null;
+            if (!canAccess(item.gateway)) return null;
             const active = pathname === item.to;
             return (
               <Link
