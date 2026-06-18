@@ -25,7 +25,8 @@ export const Route = createFileRoute("/_authenticated/wallets")({
 
 type Wallet = {
   id: string; provider: string; phone_number: string; label: string | null;
-  balance: number; daily_withdrawal_limit: number; daily_transfer_limit: number; daily_deposit_limit: number;
+  balance: number; profit: number;
+  daily_withdrawal_limit: number; daily_transfer_limit: number; daily_deposit_limit: number;
   used_withdrawal_today: number; used_transfer_today: number; used_deposit_today: number;
   is_blocked: boolean; limits_reset_date: string;
 };
@@ -114,6 +115,8 @@ function WalletCard({ wallet, onTx, isAdmin }: { wallet: Wallet; onTx: () => voi
           <div className="text-left">
             <div className="text-xs text-muted-foreground">الرصيد</div>
             <div className="text-xl font-bold text-primary tabular-nums">{fmtEGP(wallet.balance)}</div>
+            <div className="text-xs text-muted-foreground mt-1">الأرباح</div>
+            <div className="text-sm font-bold text-success tabular-nums">{fmtEGP(wallet.profit ?? 0)}</div>
           </div>
         </div>
 
@@ -258,12 +261,15 @@ function TxDialog({ wallet, onClose }: { wallet: Wallet; onClose: () => void }) 
     if (txErr) { setSaving(false); return toast.error(txErr.message); }
 
     const newUsed = used + amt;
+    const comm = Number(commission || 0);
+    // العمولة لا تخصم من الرصيد — تُجمّع في حقل الأرباح المنفصل
     const newBalance = type === "deposit" ? wallet.balance + amt : wallet.balance - amt;
+    const newProfit = (wallet.profit ?? 0) + comm;
     const shouldBlock = newUsed >= limit;
     const updates: {
       used_withdrawal_today?: number; used_transfer_today?: number; used_deposit_today?: number;
-      balance: number; is_blocked?: boolean;
-    } = { balance: newBalance };
+      balance: number; profit: number; is_blocked?: boolean;
+    } = { balance: newBalance, profit: newProfit };
     if (type === "withdrawal") updates.used_withdrawal_today = newUsed;
     else if (type === "transfer") updates.used_transfer_today = newUsed;
     else if (type === "deposit") updates.used_deposit_today = newUsed;
